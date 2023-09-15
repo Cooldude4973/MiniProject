@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mini_1/Pages/CameraPage.dart';
 
 import '../Modals/Formatters.dart';
 
@@ -30,16 +31,16 @@ class newAttendanceState extends State<newAttendance> {
     }
   }
 
-  void _showDialog(BuildContext context) {
+  void _showDialog(BuildContext context, String hintText, String heading) {
     TextEditingController textController = TextEditingController();
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Enter Subject'),
+          title: Text(heading),
           content: TextField(
             controller: textController,
-            decoration: InputDecoration(hintText: 'Example : Operating System'),
+            decoration: InputDecoration(hintText: hintText),
           ),
           actions: <Widget>[
             TextButton(
@@ -105,7 +106,8 @@ class newAttendanceState extends State<newAttendance> {
           SizedBox(height: 16.0),
           TextButton(
               onPressed: () {
-                _showDialog(context);
+                _showDialog(
+                    context, "Example : Operting System", "Enter Subject name");
               },
               child: Text("+ Add Subject")),
           SizedBox(height: 16.0),
@@ -147,17 +149,28 @@ class newAttendanceState extends State<newAttendance> {
             ],
           ),
           SizedBox(height: 16.0),
-          TextButton(onPressed: () {}, child: Text("+ Add Class")),
+          TextButton(
+              onPressed: () {
+                _showDialog(context, "Example : AIA 1", "Enter Class name ");
+              },
+              child: Text("+ Add Class")),
           SizedBox(height: 16.0),
           Center(
             child: FloatingActionButton(
               onPressed: () {
                 // Handle button click here
               },
-              child: Image.asset(
-                "assets/images/ClickImage.png",
-                height: 25,
-                color: Colors.white,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+                    return cameraPage();
+                  }));
+                },
+                child: Image.asset(
+                  "assets/images/ClickImage.png",
+                  height: 25,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
