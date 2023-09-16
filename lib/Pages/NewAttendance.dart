@@ -163,7 +163,7 @@ class newAttendanceState extends State<newAttendance> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-                    return cameraPage();
+                    return CameraPage();
                   }));
                 },
                 child: Image.asset(
