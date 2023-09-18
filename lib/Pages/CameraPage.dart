@@ -24,10 +24,14 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _image == null
-            ? const Text("No Image Selected")
-            : Image.file(_image!),
+      body: Column(
+        children: [
+          Center(
+            child: _image == null
+                ? const Text("No Image Selected")
+                : Image.file(_image!),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
