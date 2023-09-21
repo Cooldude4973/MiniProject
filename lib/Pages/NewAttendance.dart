@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mini_1/Modals/attendanceModel.dart';
 import 'package:mini_1/Pages/CameraPage.dart';
 
 import '../Modals/Formatters.dart';
@@ -14,6 +18,16 @@ class newAttendanceState extends State<newAttendance> {
   String selectedOption1 = 'Foundation Of Artificial Intelligence';
   String selectedOption2 = 'AIA 1';
   DateTime? selectedDate = null;
+  late Attendance newAttendance;
+  File? _image;
+  final imagePicker = ImagePicker();
+
+  Future getImage() async {
+    final image = await imagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = File(image!.path);
+    });
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime today = DateTime.now();
@@ -26,6 +40,7 @@ class newAttendanceState extends State<newAttendance> {
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
+        newAttendance.dateTime = formatter.format(picked);
         selectedDate = picked;
       });
     }
@@ -85,7 +100,8 @@ class newAttendanceState extends State<newAttendance> {
                     value: selectedOption1,
                     onChanged: (newValue) {
                       setState(() {
-                        selectedOption1 = newValue!;
+                        newAttendance.subjet = newValue!;
+                        selectedOption1 = newValue;
                       });
                     },
                     items: <String>[
@@ -124,7 +140,8 @@ class newAttendanceState extends State<newAttendance> {
                     value: selectedOption2,
                     onChanged: (newValue) {
                       setState(() {
-                        selectedOption2 = newValue!;
+                        newAttendance.className = newValue!;
+                        selectedOption2 = newValue;
                       });
                     },
                     items: <String>['AIA 1', 'AIA 3'].map((String value) {
@@ -156,22 +173,21 @@ class newAttendanceState extends State<newAttendance> {
               child: Text("+ Add Class")),
           SizedBox(height: 16.0),
           Center(
+            child: _image == null
+                ? const Text("No Image Selected")
+                : Image.file(_image!),
+          ),
+          Center(
             child: FloatingActionButton(
               onPressed: () {
-                // Handle button click here
+                getImage();
               },
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-                    return CameraPage();
-                  }));
-                },
-                child: Image.asset(
-                  "assets/images/ClickImage.png",
-                  height: 25,
-                  color: Colors.white,
-                ),
-              ),
+              backgroundColor: Colors.blue,
+              child: _image == null
+                  ? Icon(Icons.camera_alt)
+                  : Icon(
+                      Icons.flip_camera_android,
+                    ),
             ),
           ),
         ],
