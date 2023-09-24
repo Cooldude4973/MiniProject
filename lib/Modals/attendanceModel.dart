@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+
 class Attendance {
   Attendance({
     required this.className,
@@ -9,6 +13,6 @@ class Attendance {
   String subjet;
   String className;
   int count;
-  String imageURL;
+  Image imageURL;
   String dateTime;
 }

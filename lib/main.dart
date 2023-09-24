@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mini_1/Data/dimensions.dart';
 import 'package:mini_1/Pages/IntroductionPage/slide1.dart';
 import 'package:mini_1/Pages/IntroductionPage/slide2.dart';
@@ -9,7 +10,7 @@ import 'package:mini_1/Pages/MyPage2.dart';
 import 'package:mini_1/Widgets/LongRoundedButton.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

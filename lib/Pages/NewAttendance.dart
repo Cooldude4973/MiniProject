@@ -2,22 +2,40 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mini_1/Data/dimensions.dart';
 import 'package:mini_1/Modals/attendanceModel.dart';
-
+import 'package:mini_1/Providers/attendanceProvider.dart';
+import 'package:mini_1/Widgets/LongRoundedButton.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Modals/Formatters.dart';
 
-class newAttendance extends StatefulWidget {
+// class myConsumer extends ConsumerStatefulWidget {
+//   const myConsumer({super.key});
+
+//   @override
+//   ConsumerState<ConsumerStatefulWidget> createState() => _myConsumerState();
+// }
+
+// class _myConsumerState extends ConsumerState<myConsumer> {
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container();
+//   }
+// }
+
+class newAttendance extends ConsumerStatefulWidget {
   const newAttendance({super.key});
 
   @override
-  State<newAttendance> createState() => newAttendanceState();
+  ConsumerState<newAttendance> createState() => newAttendanceState();
 }
 
-class newAttendanceState extends State<newAttendance> {
+class newAttendanceState extends ConsumerState<newAttendance> {
   String selectedOption1 = 'Foundation Of Artificial Intelligence';
   String selectedOption2 = 'AIA 1';
   DateTime? selectedDate = null;
-  late Attendance newAttendance;
+
   File? _image;
   final imagePicker = ImagePicker();
 
@@ -39,9 +57,16 @@ class newAttendanceState extends State<newAttendance> {
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
-        newAttendance.dateTime = formatter.format(picked);
         selectedDate = picked;
       });
+    }
+  }
+
+  Image provideImage() {
+    if (_image == null) {
+      return Image.asset("assets/images/PlaceHolder.png");
+    } else {
+      return Image.file(_image!);
     }
   }
 
@@ -81,119 +106,144 @@ class newAttendanceState extends State<newAttendance> {
 
   @override
   Widget build(BuildContext context) {
+    final attendanceList = ref.watch(attendanceProvider.notifier);
+
     return Container(
       padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButton<String>(
-                    value: selectedOption1,
-                    onChanged: (newValue) {
-                      setState(() {
-                        newAttendance.subjet = newValue!;
-                        selectedOption1 = newValue;
-                      });
-                    },
-                    items: <String>[
-                      'Foundation Of Artificial Intelligence',
-                      'Operating System',
-                      'Design Algorithm and Analysis'
-                    ].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.0),
-          TextButton(
-              onPressed: () {
-                _showDialog(
-                    context, "Example : Operting System", "Enter Subject name");
-              },
-              child: Text("+ Add Subject")),
-          SizedBox(height: 16.0),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButton<String>(
-                    value: selectedOption2,
-                    onChanged: (newValue) {
-                      setState(() {
-                        newAttendance.className = newValue!;
-                        selectedOption2 = newValue;
-                      });
-                    },
-                    items: <String>['AIA 1', 'AIA 3'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedOption1,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedOption1 = newValue!;
+                        });
+                      },
+                      items: <String>[
+                        'Foundation Of Artificial Intelligence',
+                        'Operating System',
+                        'Design Algorithm and Analysis'
+                      ].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 16.0),
-              Text(selectedDate == null
-                  ? 'No Selected Date'
-                  : formatter.format(selectedDate!)),
-              IconButton(
+              ],
+            ),
+            SizedBox(height: 16.0),
+            TextButton(
                 onPressed: () {
-                  _selectDate(context);
+                  _showDialog(context, "Example : Operting System",
+                      "Enter Subject name");
                 },
-                icon: const Icon(Icons.calendar_month),
-              )
-            ],
-          ),
-          SizedBox(height: 16.0),
-          TextButton(
-              onPressed: () {
-                _showDialog(context, "Example : AIA 1", "Enter Class name ");
-              },
-              child: Text("+ Add Class")),
-          SizedBox(height: 16.0),
-          Center(
-            child: _image == null
-                ? const Text("No Image Selected")
-                : Image.file(
-                    _image!,
-                    height: 30,
-                    width: 50,
+                child: Text("+ Add Subject")),
+            SizedBox(height: 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedOption2,
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedOption2 = newValue!;
+                        });
+                      },
+                      items: <String>['AIA 1', 'AIA 3'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
                   ),
-          ),
-          Center(
-            child: FloatingActionButton(
-              onPressed: () {
-                getImage();
-              },
-              backgroundColor: Colors.blue,
+                ),
+                SizedBox(width: 16.0),
+                Text(selectedDate == null
+                    ? 'No Selected Date'
+                    : formatter.format(selectedDate!)),
+                IconButton(
+                  onPressed: () {
+                    _selectDate(context);
+                  },
+                  icon: const Icon(Icons.calendar_month),
+                )
+              ],
+            ),
+            SizedBox(height: 16.0),
+            TextButton(
+                onPressed: () {
+                  _showDialog(context, "Example : AIA 1", "Enter Class name ");
+                },
+                child: Text("+ Add Class")),
+            SizedBox(height: 16.0),
+            Center(
               child: _image == null
-                  ? Icon(Icons.camera_alt)
-                  : Icon(
-                      Icons.flip_camera_android,
+                  ? const Text("No Image Selected")
+                  : Image.file(
+                      _image!,
+                      width: getDimensionWidth(context) * (3 / 4),
                     ),
             ),
-          ),
-        ],
+            const SizedBox(
+              height: 30,
+            ),
+            Center(
+              child: FloatingActionButton(
+                onPressed: () {
+                  getImage();
+                },
+                backgroundColor: Colors.blue,
+                child: _image == null
+                    ? Icon(Icons.camera_alt)
+                    : Icon(
+                        Icons.flip_camera_android,
+                      ),
+              ),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            Center(
+              child: longRoundBtn(
+                text: "Save",
+                width: getDimensionWidth(context) * 3 / 4,
+                onPressed: () {
+                  attendanceList.addAttendance(Attendance(
+                      className: selectedOption2,
+                      subjet: selectedOption1,
+                      count: 100,
+                      // imageURL: Image.asset("assets/images/PlaceHolder.png"),
+                      imageURL: provideImage(),
+                      dateTime:
+                          formatter.format(selectedDate ?? DateTime.now())));
+                  Navigator.of(context).pop();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

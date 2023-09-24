@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mini_1/Pages/NewAttendance.dart';
 import 'package:mini_1/Pages/bottomModalPage.dart';
+import 'package:mini_1/Pages/tableViewPage.dart';
 import 'package:mini_1/Widgets/homePageCard.dart';
 
 class homePage extends StatelessWidget {
@@ -41,9 +42,16 @@ class homePage extends StatelessWidget {
               ),
             ),
 
-            homePageCard(
-              imageURL: "HistoryAttendance",
-              title: "Attendance Record",
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
+                  return attendanceTable();
+                }));
+              },
+              child: homePageCard(
+                imageURL: "HistoryAttendance",
+                title: "Attendance Record",
+              ),
             ),
             homePageCard(
               imageURL: "UpdateAttendance",
