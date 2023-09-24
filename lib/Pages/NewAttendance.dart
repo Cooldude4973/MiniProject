@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mini_1/Modals/attendanceModel.dart';
-import 'package:mini_1/Pages/CameraPage.dart';
 
 import '../Modals/Formatters.dart';
 
@@ -175,7 +174,11 @@ class newAttendanceState extends State<newAttendance> {
           Center(
             child: _image == null
                 ? const Text("No Image Selected")
-                : Image.file(_image!),
+                : Image.file(
+                    _image!,
+                    height: 30,
+                    width: 50,
+                  ),
           ),
           Center(
             child: FloatingActionButton(
