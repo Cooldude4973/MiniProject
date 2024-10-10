@@ -7,12 +7,12 @@ class AttendanceNotifier extends StateNotifier<List<Attendance>> {
 
   void addAttendance(Attendance attendance) {
     state = [...state, attendance];
-    for (int i = 0; i < state.length; i++) {
-      print(state[i].className);
-      print(state[i].subjet);
-      print(state[i].dateTime);
-      print(state[i].imageURL);
-    }
+    // for (int i = 0; i < state.length; i++) {
+    //   print(state[i].className);
+    //   print(state[i].subjet);
+    //   print(state[i].dateTime);
+    //   print(state[i].imageURL);
+    // }
   }
 }
 
